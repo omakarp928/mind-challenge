@@ -224,14 +224,47 @@ function answer(choice){
 }
 
 
-function nextQuestion(){
- if(index < questions.length - 1){
-  index++;
-  showQuestion();
- }
- else finish();
-}
 
+function showQuestion(){
+ clearInterval(clock);
+ locked=false;
+ seconds=20;
+
+ let q=questions[index];
+
+ document.getElementById("counter").innerText=
+ (lang==="hi"?"सवाल ":"Question ")+
+ (index+1)+"/"+questions.length;
+
+ document.getElementById("timer").innerText=seconds;
+
+ document.getElementById("progress").style.width=
+ (index/questions.length*100)+"%";
+
+ document.getElementById("question").innerText=
+ q[lang==="hi"?0:1];
+
+ document.getElementById("status").innerText="";
+ document.getElementById("next").style.display="none";
+
+ let area=document.getElementById("options");
+ area.innerHTML="";
+
+ q[lang==="hi"?2:3].forEach((option,i)=>{
+  let btn=document.createElement("button");
+  btn.className="option";
+  btn.innerText=String.fromCharCode(65+i)+". "+option;
+  btn.onclick=()=>answer(i);
+  area.appendChild(btn);
+ });
+
+ clock=setInterval(()=>{
+  seconds--;
+  document.getElementById("timer").innerText=seconds;
+  if(seconds<=0)answer(-1);
+ },1000);
+}
+ 
 
 function finish(){
  clearInterval(clock);
