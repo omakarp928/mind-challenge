@@ -223,10 +223,15 @@ function answer(choice){
  lang==="hi"?"रिजल्ट देखें":"See Result";
 }
 
+
 function nextQuestion(){
- if(index<9){index++;showQuestion();}
+ if(index < questions.length - 1){
+  index++;
+  showQuestion();
+ }
  else finish();
 }
+
 
 function finish(){
  clearInterval(clock);
