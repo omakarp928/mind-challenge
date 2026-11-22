@@ -178,10 +178,10 @@ function showQuestion(){
  locked=false;seconds=20;
  let q=questions[index];
  document.getElementById("counter").innerText=
- (lang==="hi"?"सवाल ":"Question ")+(index+1)+"/10";
+ (lang==="hi"?"सवाल ":"Question ")+(index+1)+"/"+questions.length;
  document.getElementById("timer").innerText=seconds;
  document.getElementById("question").innerText=q[lang==="hi"?0:1];
- document.getElementById("progress").style.width=(index*10)+"%";
+ document.getElementById("progress").style.width=(index/questions.length*100)+"%";
  document.getElementById("status").innerText="";
  document.getElementById("next").style.display="none";
  let area=document.getElementById("options");
@@ -219,7 +219,7 @@ function answer(choice){
  }
  document.getElementById("progress").style.width=((index+1)*10)+"%";
  document.getElementById("next").style.display="inline-block";
- if(index===9)document.getElementById("next").innerText=
+ if(index===questions.length-1)(index===questions.length-document.getElementById("next").innerText=
  lang==="hi"?"रिजल्ट देखें":"See Result";
 }
 
@@ -270,7 +270,7 @@ function finish(){
  clearInterval(clock);
  document.getElementById("game").style.display="none";
  document.getElementById("result").style.display="block";
- document.getElementById("score").innerText=points+"/10";
+ document.getElementById("score").innerText=points+"/"+questions.length;
  let best=Number(localStorage.getItem("mindBest")||0);
  if(points>best){best=points;localStorage.setItem("mindBest",best);}
  document.getElementById("best").innerText=best;
