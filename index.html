@@ -296,9 +296,9 @@ function finish(){
  document.getElementById("best").innerText=best;
  document.getElementById("message").innerText=
  lang==="hi"?
- (points>=8?"शानदार! आप बहुत अच्छा खेले।":points>=5?"अच्छा प्रयास! फिर कोशिश करें।":"कोई बात नहीं! दोबारा खेलें।"):
- (points>=8?"Excellent! Great job.":points>=5?"Good effort! Try again.":"Keep practicing!");
-}
+ (points>=questions.length*0.8?"शानदार! आप बहुत अच्छा खेले।":points>=questions.length*0.5?"अच्छा प्रयास! फिर कोशिश करें।":"कोई बात नहीं! दोबारा खेलें।"):
+ 
+}(points>=questions.length*0.8?"Excellent! Great job.":points>=questions.length*0.5?"Good effort! Try again.":"Keep practicing!");
 
 function goHome(){
  clearInterval(clock);
