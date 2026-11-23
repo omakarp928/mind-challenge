@@ -4,351 +4,251 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#11152e">
-<title>Mind Challenge - Brain Quiz</title>
-
+<title>Mind Challenge</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;padding:16px;
- font-family:Arial,sans-serif;
- background:linear-gradient(135deg,#10152e,#30205c);
- color:white;text-align:center;
-}
-.container{max-width:720px;margin:auto}
-header{padding:22px 10px}
-h1{color:#ffd166;font-size:34px}
-h2{line-height:1.4}
-.card{
- background:#202747;padding:22px;
- border-radius:20px;margin:18px 0;
- box-shadow:0 8px 25px #0005;
-}
-button{
- padding:13px 18px;margin:7px;
- border:0;border-radius:12px;
- background:#8067ff;color:white;
- font-size:16px;font-weight:bold;
- cursor:pointer;
-}
-button:hover{background:#6048dd}
-button:disabled{opacity:.8;cursor:not-allowed}
-.option{
- display:block;width:100%;
- background:#344064;text-align:left;
- margin:10px 0;
-}
-.correct{background:#13875c!important}
-.wrong{background:#b33b58!important}
+body{margin:0;padding:15px;font-family:Arial,sans-serif;background:#eef3ff;color:#18233a;text-align:center}
+.container{max-width:600px;margin:auto}
+.card{background:white;padding:20px;margin:15px 0;border-radius:16px;box-shadow:0 3px 12px #ccd4e5}
+h1{color:#315bd6}
+button,select{padding:12px;margin:6px;border:0;border-radius:9px;font-size:16px}
+button{background:#315bd6;color:white;cursor:pointer}
+button:disabled{opacity:.6}
+.option{display:block;width:100%;background:#edf1ff;color:#18233a;text-align:left}
+.option:hover{background:#d9e2ff}
 #game,#result{display:none}
-#question{font-size:22px;line-height:1.5}
-#status{color:#ffd166;min-height:25px}
-.small{color:#bbc5e6;line-height:1.6}
-#progress{
- height:9px;width:0%;
- background:#40d6bd;border-radius:8px;
- transition:width .3s;
-}
-.progress-bg{
- background:#394466;height:9px;
- border-radius:8px;overflow:hidden;
-}
-.category{min-width:135px}
-.ad{
- border:1px dashed #8e9bc5;
- padding:18px;border-radius:12px;
- color:#c4c9df;margin:20px 0;
-}
-a{color:#60a5fa}
-footer{padding:15px}
-@media(max-width:480px){
- body{padding:10px}
- h1{font-size:29px}
- .card{padding:16px}
- button{font-size:15px}
- #question{font-size:20px}
-}
+#progress{height:10px;background:#ddd;border-radius:10px;overflow:hidden}
+#bar{height:10px;width:0;background:#315bd6}
+footer{font-size:13px;color:#667}
 </style>
 </head>
-
 <body>
 <div class="container">
 
-<header>
 <h1>🧠 Mind Challenge</h1>
-<p id="tagline">अपने दिमाग को चुनौती दें!</p>
-<button onclick="changeLanguage()">हिंदी / English</button>
-</header>
+<p>Think • Answer • Win</p>
+
+<div class="card">
+<label id="languageLabel">भाषा चुनें:</label><br>
+<select id="language" onchange="changeLanguage()">
+<option value="hi">हिंदी</option>
+<option value="en">English</option>
+<option value="mr">मराठी</option>
+</select>
+</div>
 
 <div id="home" class="card">
-<h2 id="welcome">खेलना शुरू करें!</h2>
-<p id="description">मजेदार सवाल हल करें और अपना स्कोर बढ़ाएँ।</p>
-<h3 id="choose">अपनी कैटेगरी चुनें</h3>
-
-<button class="category" onclick="start('logic')">🧩 Logic</button>
-<button class="category" onclick="start('math')">➗ Math</button>
-<button class="category" onclick="start('riddle')">💡 Riddles</button>
-<button class="category" onclick="start('mixed')">⚡ Mixed Quiz</button>
-
-<p>🏆 <span id="bestLabel">Best Score</span>:
-<b id="best">0</b></p>
+<h2 id="welcome">Mind Challenge में आपका स्वागत है!</h2>
+<p id="choose">अपना Quiz चुनें</p>
+<button onclick="start('logic')" id="logicBtn">🧩 Logic</button>
+<button onclick="start('math')" id="mathBtn">➗ Math</button>
+<button onclick="start('riddle')" id="riddleBtn">💡 Riddles</button>
+<button onclick="start('mixed')" id="mixedBtn">⚡ Mixed Quiz</button>
+<p id="bestLabel">आपका Best Score:</p>
+<strong id="best">0</strong>
 </div>
 
 <div id="game" class="card">
-<p id="counter">Question 1/10</p>
-<p>⏱️ <span id="timer">20</span> sec</p>
-
-<div class="progress-bg">
-<div id="progress"></div>
-</div>
-
-<h2 id="question"></h2>
+<p id="counter"></p>
+<p>⏱️ <span id="timer">20</span></p>
+<div id="progress"><div id="bar"></div></div>
+<h3 id="question"></h3>
 <div id="options"></div>
-<p id="status"></p>
-
-<button id="next" onclick="nextQuestion()" style="display:none">
-अगला सवाल ➜
-</button>
-<button onclick="goHome()" id="homeButton">Home</button>
+<p id="feedback"></p>
+<button id="next" onclick="nextQuestion()">Next ➡️</button>
 </div>
 
 <div id="result" class="card">
-<h1>🏆</h1>
 <h2 id="resultTitle">आपका रिजल्ट</h2>
 <h1 id="score"></h1>
 <p id="message"></p>
-<p>🏆 <span id="bestResultLabel">Best Score</span>:
-<b id="bestResult">0</b></p>
-<button onclick="goHome()" id="againButton">Play Again</button>
+<p id="bestResult"></p>
+<button onclick="goHome()" id="again">Play Again</button>
 </div>
 
-<div class="ad">
-<strong>Advertisement Space</strong>
-<p>Ads can be added after advertising approval.</p>
+<div class="card">
+<h3 id="aboutTitle">About Us</h3>
+<p id="aboutText">Mind Challenge एक मनोरंजक Quiz Game है।</p>
+<h3 id="contactTitle">Contact Us</h3>
+<p>ompanchal766@gmail.com</p>
+<h3 id="supportTitle">Support Us ❤️</h3>
+<a href="https://buymeacoffee.com/ompanchal70" target="_blank">Support Mind Challenge</a>
 </div>
 
-<section class="card">
-<h2>About Mind Challenge</h2>
-<p>Welcome to Mind Challenge!</p>
-<p>यह एक मजेदार Quiz वेबसाइट है जहाँ आप Logic, Math और Riddles के सवाल हल कर सकते हैं।</p>
-</section>
-
-<section class="card">
-<h2>Contact Us</h2>
-<p>Email: <a href="mailto:ompanchal766@gmail.com">ompanchal766@gmail.com</a></p>
-</section>
-
-<section class="card">
-<h2>Privacy Policy</h2>
-<p>Mind Challenge पर Quiz खेलने के लिए अकाउंट बनाने की जरूरत नहीं है। आपका Best Score आपके ब्राउज़र में सेव होता है।</p>
-<p>भविष्य में विज्ञापन सेवाएँ जोड़ी जा सकती हैं। ऐसी सेवाएँ अपनी Cookies और Data Policy के अनुसार जानकारी का उपयोग कर सकती हैं।</p>
-</section>
-
-<section class="card">
-<h2>Disclaimer</h2>
-<p>यह वेबसाइट मनोरंजन और अभ्यास के लिए है। यह कोई वैज्ञानिक IQ टेस्ट नहीं है।</p>
-</section>
-
-<div style="margin:25px">
-<a href="https://buymeacoffee.com/ompanchal70"
-target="_blank" rel="noopener noreferrer"
-style="display:inline-block;background:#ffdd00;color:#000;padding:14px 25px;border-radius:12px;font-weight:bold;text-decoration:none">
-☕ Support Us
-</a>
-</div>
-
-<footer>
-<p class="small">© 2026 Mind Challenge | Play • Learn • Improve</p>
-</footer>
-
+<footer>© 2026 Mind Challenge | Play • Learn • Improve</footer>
 </div>
 
 <script>
-let lang="hi";
-let questions=[];
-let index=0;
-let points=0;
-let seconds=20;
-let clock=null;
-let locked=false;
+let lang="hi",questions=[],index=0,points=0;
+let seconds=20,clock=null,locked=false;
+
+const words={
+hi:{
+welcome:"Mind Challenge में आपका स्वागत है!",
+choose:"अपना Quiz चुनें",logic:"🧩 Logic",math:"➗ Math",
+riddle:"💡 पहेलियाँ",mixed:"⚡ Mixed Quiz",
+best:"आपका Best Score:",question:"सवाल",next:"अगला सवाल ➡️",
+correct:"सही जवाब! 🎉",wrong:"गलत जवाब!",result:"आपका रिजल्ट",
+again:"फिर खेलें",about:"मनोरंजन के लिए Quiz Game।",
+excellent:"शानदार! आप बहुत अच्छा खेले।",
+good:"अच्छा प्रयास! फिर कोशिश करें।",
+poor:"कोई बात नहीं! दोबारा खेलें।",
+bestResult:"Best Score:"
+},
+en:{
+welcome:"Welcome to Mind Challenge!",
+choose:"Choose Your Quiz",logic:"🧩 Logic",math:"➗ Math",
+riddle:"💡 Riddles",mixed:"⚡ Mixed Quiz",
+best:"Your Best Score:",question:"Question",next:"Next ➡️",
+correct:"Correct Answer! 🎉",wrong:"Wrong Answer!",
+result:"Your Result",again:"Play Again",
+about:"A fun quiz game for entertainment.",
+excellent:"Excellent! Great job.",
+good:"Good effort! Try again.",
+poor:"Keep practicing!",
+bestResult:"Best Score:"
+},
+mr:{
+welcome:"Mind Challenge मध्ये तुमचे स्वागत आहे!",
+choose:"तुमची प्रश्नमंजुषा निवडा",
+logic:"🧩 तर्कशक्ती",math:"➗ गणित",
+riddle:"💡 कोडी",mixed:"⚡ मिश्र प्रश्नमंजुषा",
+best:"तुमचा सर्वोत्तम स्कोअर:",
+question:"प्रश्न",next:"पुढील प्रश्न ➡️",
+correct:"बरोबर उत्तर! 🎉",wrong:"चुकीचे उत्तर!",
+result:"तुमचा निकाल",again:"पुन्हा खेळा",
+about:"मनोरंजनासाठी एक प्रश्नमंजुषा खेळ.",
+excellent:"उत्तम! तुम्ही खूप छान खेळलात.",
+good:"छान प्रयत्न! पुन्हा प्रयत्न करा.",
+poor:"काही हरकत नाही! पुन्हा खेळा.",
+bestResult:"सर्वोत्तम स्कोअर:"
+}
+};
+
+// प्रत्येक प्रश्न: हिंदी, इंग्रजी, मराठी,
+// हिंदी पर्याय, इंग्रजी पर्याय, मराठी पर्याय, योग्य उत्तर क्रमांक
 
 const data={
 logic:[
-["एक किलो रूई और एक किलो लोहा, कौन भारी?","Which is heavier: 1 kg cotton or 1 kg iron?",["रूई","लोहा","दोनों बराबर","पता नहीं"],["Cotton","Iron","Equal","Not sure"],2],
-["दौड़ में दूसरे नंबर वाले को पीछे छोड़ा। अब आप कौन से नंबर पर हैं?","You pass the runner in second place. What place are you in?",["पहले","दूसरे","तीसरे","चौथे"],["First","Second","Third","Fourth"],1],
-["किस महीने में 28 दिन होते हैं?","Which month has 28 days?",["फरवरी","सभी महीने","जनवरी","मार्च"],["February","All months","January","March"],1],
-["एक कमरे के चार कोनों में एक-एक बिल्ली है। कुल कितनी?","Four corners have one cat each. How many cats?",["2","4","8","16"],["2","4","8","16"],1],
-["कौन सी चीज जितनी सूखती है उतनी गीली होती है?","What gets wetter as it dries?",["तौलिया","कागज","साबुन","रेत"],["Towel","Paper","Soap","Sand"],0],
-["किसके पास सिर और पूंछ है पर शरीर नहीं?","What has a head and a tail but no body?",["सिक्का","सांप","मछली","कंघी"],["Coin","Snake","Fish","Comb"],0],
-["बिना आवाज के क्या टूट सकता है?","What can be broken without a sound?",["कांच","वादा","लकड़ी","पत्थर"],["Glass","Promise","Wood","Stone"],1],
-["आपके पास 3 सेब हैं, 2 उठा लिए। कितने आपके पास हैं?","You take 2 apples from 3. How many do you have?",["1","2","3","5"],["1","2","3","5"],1],
-["कौन हमेशा आता है लेकिन कभी पहुंचता नहीं?","What is always coming but never arrives?",["कल","आज","सुबह","रात"],["Tomorrow","Today","Morning","Night"],0],
-["पहले क्या जलाएंगे: मोमबत्ती या माचिस?","What do you light first: candle or match?",["मोमबत्ती","माचिस","दोनों","कुछ नहीं"],["Candle","Match","Both","Nothing"],1]
+["एक किलो रूई और एक किलो लोहा, कौन भारी?","Which is heavier: 1 kg cotton or 1 kg iron?","एक किलो कापूस आणि एक किलो लोखंड, यापैकी जड कोण? ",["रूई","लोहा","दोनों बराबर","पता नहीं"],["Cotton","Iron","Both equal","Not sure"],["कापूस","लोखंड","दोन्ही समान","माहित नाही"],2],
+["दौड़ में दूसरे नंबर वाले को पीछे छोड़ा। अब आप किस नंबर पर हैं?","You pass the runner in second place. What place are you in?","शर्यतीत दुसऱ्या क्रमांकाच्या धावपटूला मागे टाकले. आता तुम्ही कितव्या क्रमांकावर? ",["पहले","दूसरे","तीसरे","चौथे"],["First","Second","Third","Fourth"],["पहिले","दुसरे","तिसरे","चौथे"],1],
+["किस महीने में 28 दिन होते हैं?","Which month has 28 days?","कोणत्या महिन्यात 28 दिवस असतात?",["फरवरी","जनवरी","सभी महीने","जून"],["February","January","All months","June"],["फेब्रुवारी","जानेवारी","सर्व महिने","जून"],2],
+["चार बिल्लियों के चार पैर, कुल कितने पैर?","Four cats have how many legs?","चार मांजरांचे एकूण किती पाय?",["8","12","16","20"],["8","12","16","20"],["8","12","16","20"],2],
+["दो पिता और दो बेटे बाजार गए। कुल कितने लोग?","Two fathers and two sons went shopping. How many people?","दोन वडील आणि दोन मुलगे बाजारात गेले. एकूण किती लोक?",["2","3","4","5"],["2","3","4","5"],["2","3","4","5"],1],
+["एक पेड़ पर 5 पक्षी थे, एक उड़ गया। कितने बचे?","There were 5 birds on a tree. One flew away. How many remain?","झाडावर 5 पक्षी होते. एक उडून गेला. किती उरले?",["4","5","3","1"],["4","5","3","1"],["4","5","3","1"],0],
+["ऐसी कौन सी चीज है जो टूटने पर काम आती है?","What becomes useful when broken?","कोणती गोष्ट फोडल्यावर उपयोगी पडते?",["कांच","अंडा","पत्थर","कागज"],["Glass","Egg","Stone","Paper"],["काच","अंडे","दगड","कागद"],1],
+["एक दर्जन में कितनी चीजें होती हैं?","How many items are in a dozen?","एका डझनमध्ये किती वस्तू असतात?",["10","11","12","13"],["10","11","12","13"],["10","11","12","13"],2],
+["आपके पास 3 आम हैं, आपने 2 खा लिए। कितने बचे?","You have 3 mangoes and eat 2. How many are left?","तुमच्याकडे 3 आंबे आहेत. 2 खाल्ले. किती उरले?",["1","2","3","5"],["1","2","3","5"],["1","2","3","5"],0],
+["ऐसी कौन सी चीज है जो ऊपर जाती है लेकिन नीचे नहीं आती?","What goes up but never comes down?","कोणती गोष्ट वर जाते पण खाली येत नाही?",["उम्र","गेंद","पतंग","पानी"],["Age","Ball","Kite","Water"],["वय","चेंडू","पतंग","पाणी"],0]
 ],
-
 math:[
-["12 × 3 कितना है?","What is 12 × 3?",["30","36","32","40"],["30","36","32","40"],1],
-["100 - 25 कितना है?","What is 100 - 25?",["65","75","85","70"],["65","75","85","70"],1],
-["9 का वर्ग कितना है?","What is 9 squared?",["18","72","81","99"],["18","72","81","99"],2],
-["2, 4, 8, 16, अगला नंबर?","2, 4, 8, 16, next?",["20","24","30","32"],["20","24","30","32"],3],
-["एक दर्जन में कितने होते हैं?","How many in a dozen?",["10","12","14","16"],["10","12","14","16"],1],
-["50 का आधा + 10 कितना?","Half of 50 + 10?",["25","30","35","40"],["25","30","35","40"],2],
-["15 + 17 कितना है?","What is 15 + 17?",["30","31","32","33"],["30","31","32","33"],2],
-["5 × 5 - 5 कितना?","What is 5 × 5 - 5?",["15","20","25","30"],["15","20","25","30"],1],
-["सबसे छोटी अभाज्य संख्या?","Smallest prime number?",["0","1","2","3"],["0","1","2","3"],2],
-["एक घंटे में कितने मिनट?","Minutes in one hour?",["30","45","60","100"],["30","45","60","100"],2]
+["12 × 3 कितना होता है?","What is 12 × 3?","12 × 3 किती?",["30","36","32","40"],["30","36","32","40"],["30","36","32","40"],1],
+["100 - 25 कितना है?","What is 100 - 25?","100 - 25 किती?",["65","70","75","80"],["65","70","75","80"],["65","70","75","80"],2],
+["9 का वर्ग कितना है?","What is 9 squared?","9 चा वर्ग किती?",["18","72","81","99"],["18","72","81","99"],["18","72","81","99"],2],
+["2, 4, 8, 16 के बाद क्या आएगा?","What comes next: 2, 4, 8, 16?","2, 4, 8, 16 नंतर काय येईल?",["20","24","30","32"],["20","24","30","32"],["20","24","30","32"],3],
+["50 का आधा कितना है?","What is half of 50?","50 चा अर्धा किती?",["20","25","30","35"],["20","25","30","35"],["20","25","30","35"],1],
+["7 + 8 कितना है?","What is 7 + 8?","7 + 8 किती?",["14","15","16","17"],["14","15","16","17"],["14","15","16","17"],1],
+["5 × 5 कितना है?","What is 5 × 5?","5 × 5 किती?",["10","20","25","30"],["10","20","25","30"],["10","20","25","30"],2],
+["100 ÷ 10 कितना है?","What is 100 ÷ 10?","100 ÷ 10 किती?",["5","10","15","20"],["5","10","15","20"],["5","10","15","20"],1],
+["एक घंटे में कितने मिनट होते हैं?","How many minutes are in an hour?","एका तासात किती मिनिटे असतात?",["30","45","60","90"],["30","45","60","90"],["30","45","60","90"],2],
+["15 + 15 कितना है?","What is 15 + 15?","15 + 15 किती?",["20","25","30","35"],["20","25","30","35"],["20","25","30","35"],2]
 ],
-
 riddle:[
-["मेरे दांत हैं, पर काट नहीं सकता। मैं कौन?","I have teeth but cannot bite. What am I?",["शेर","कंघी","कुत्ता","मछली"],["Lion","Comb","Dog","Fish"],1],
-["बिना पंख के उड़ता है और बिना आंखों के रोता है।","Flies without wings and cries without eyes.",["बादल","पेड़","पत्थर","किताब"],["Cloud","Tree","Stone","Book"],0],
-["जितना निकालो उतना बड़ा होता जाता है।","The more you take away, the bigger it gets.",["गड्ढा","पैसा","पेड़","घर"],["Hole","Money","Tree","House"],0],
-["आपकी कौन सी चीज दूसरे ज्यादा इस्तेमाल करते हैं?","What do others use more than you do?",["नाम","जूते","फोन","घर"],["Name","Shoes","Phone","House"],0],
-["किसके पास बहुत सारी चाबियां हैं पर ताला नहीं खोलता?","What has many keys but opens no locks?",["दरवाजा","कीबोर्ड","बैग","ताला"],["Door","Keyboard","Bag","Lock"],1],
-["कौन सी चीज ऊपर जाती है नीचे नहीं आती?","What goes up but never comes down?",["उम्र","गुब्बारा","लिफ्ट","धुआं"],["Age","Balloon","Lift","Smoke"],0],
-["पानी में घुल जाता है और स्वाद बदल देता है।","It dissolves in water and changes its taste.",["नमक","पत्थर","लकड़ी","कागज"],["Salt","Stone","Wood","Paper"],0],
-["कौन सा बैंक पैसा नहीं रखता?","Which bank does not keep money?",["नदी का किनारा","स्टेट बैंक","ATM","पोस्ट ऑफिस"],["River bank","State bank","ATM","Post office"],0],
-["बिना पैरों के चलता है।","Moves without legs.",["घड़ी","कुर्सी","मेज","कप"],["Clock","Chair","Table","Cup"],0],
-["किसकी आवाज है पर शरीर नहीं?","What has a voice but no body?",["गूंज","किताब","पत्थर","कप"],["Echo","Book","Stone","Cup"],0]
+["मेरे दांत हैं, पर काट नहीं सकता। मैं कौन?","I have teeth but cannot bite. What am I?","माझे दात आहेत, पण मी चावू शकत नाही. मी कोण?",["शेर","कंघी","कुत्ता","मछली"],["Lion","Comb","Dog","Fish"],["सिंह","कंगवा","कुत्रा","मासा"],1],
+["बिना पंख के उड़ता है और बिना आंखों के रोता है।","Flies without wings and cries without eyes.","पंख नसताना उडतो आणि डोळे नसताना रडतो.",["बादल","पेड़","पत्थर","किताब"],["Cloud","Tree","Stone","Book"],["ढग","झाड","दगड","पुस्तक"],0],
+["जितना निकालो उतना बड़ा होता है। क्या है?","The more you take away, the bigger it gets. What is it?","जितके काढाल तितके मोठे होते. ते काय?",["गड्ढा","पेड़","पानी","घर"],["Hole","Tree","Water","House"],["खड्डा","झाड","पाणी","घर"],0],
+["दूसरे लोग आपका नाम लेते हैं, लेकिन आप खुद नहीं लेते।","Others use your name, but you don't. What is it?","इतर लोक तुमचे नाव घेतात, पण तुम्ही स्वतः घेत नाही. ते काय?",["नाम","उम्र","पैसा","खाना"],["Your name","Age","Money","Food"],["तुमचे नाव","वय","पैसे","अन्न"],0],
+["कई चाबियां हैं, लेकिन ताला नहीं खोलता।","It has many keys but opens no locks.","यात अनेक कळा आहेत, पण कुलूप उघडत नाही.",["ताला","कीबोर्ड","दरवाजा","घड़ी"],["Lock","Keyboard","Door","Clock"],["कुलूप","कीबोर्ड","दरवाजा","घड्याळ"],1],
+["पानी में पैदा होता है और पानी में मर जाता है।","Born in water and dies in water. What is it?","पाण्यात जन्मतो आणि पाण्यातच मरतो. तो काय?",["बर्फ","मछली","पत्थर","पेड़"],["Ice","Fish","Stone","Tree"],["बर्फ","मासा","दगड","झाड"],0],
+["ऐसी कौन सी चीज है जो बोलती नहीं लेकिन जवाब देती है?","What does not speak but answers you?","कोणती गोष्ट बोलत नाही पण उत्तर देते?",["गूंज","किताब","कुर्सी","जूता"],["Echo","Book","Chair","Shoe"],["प्रतिध्वनी","पुस्तक","खुर्ची","बूट"],0],
+["दिन में सोता है और रात में जागता है।","Sleeps during the day and wakes at night.","दिवसा झोपतो आणि रात्री जागा असतो.",["सूरज","चांद","उल्लू","पेड़"],["Sun","Moon","Owl","Tree"],["सूर्य","चंद्र","घुबड","झाड"],2],
+["बिना पैर के चलता है। क्या है?","It moves without legs. What is it?","पाय नसताना चालते. ते काय?",["घड़ी","जूता","कुर्सी","पत्थर"],["Clock","Shoe","Chair","Stone"],["घड्याळ","बूट","खुर्ची","दगड"],0],
+["आपके पास होता है, लेकिन दूसरे लोग ज्यादा इस्तेमाल करते हैं।","It belongs to you, but others use it more.","ते तुमचे आहे, पण इतर लोक त्याचा जास्त वापर करतात.",["आपका नाम","आपका घर","आपका खाना","आपका पैसा"],["Your name","Your house","Your food","Your money"],["तुमचे नाव","तुमचे घर","तुमचे अन्न","तुमचे पैसे"],0]
 ]
 };
 
 function changeLanguage(){
- lang=lang==="hi"?"en":"hi";
-
- document.getElementById("tagline").innerText=
- lang==="hi"?"अपने दिमाग को चुनौती दें!":"Challenge your brain!";
-
- document.getElementById("welcome").innerText=
- lang==="hi"?"खेलना शुरू करें!":"Start Playing!";
-
- document.getElementById("description").innerText=
- lang==="hi"?"मजेदार सवाल हल करें और अपना स्कोर बढ़ाएँ।":"Solve fun questions and improve your score.";
-
- document.getElementById("choose").innerText=
- lang==="hi"?"अपनी कैटेगरी चुनें":"Choose a category";
-
- document.getElementById("bestLabel").innerText=
- lang==="hi"?"सर्वश्रेष्ठ स्कोर":"Best Score";
-
- document.getElementById("homeButton").innerText=
- lang==="hi"?"होम":"Home";
-
- document.getElementById("againButton").innerText=
- lang==="hi"?"फिर खेलें":"Play Again";
-
- document.getElementById("resultTitle").innerText=
- lang==="hi"?"आपका रिजल्ट":"Your Result";
-
- if(document.getElementById("game").style.display==="block"){
-  showQuestion();
- }
+ lang=document.getElementById("language").value;
+ const w=words[lang];
+ document.getElementById("welcome").innerText=w.welcome;
+ document.getElementById("choose").innerText=w.choose;
+ document.getElementById("logicBtn").innerText=w.logic;
+ document.getElementById("mathBtn").innerText=w.math;
+ document.getElementById("riddleBtn").innerText=w.riddle;
+ document.getElementById("mixedBtn").innerText=w.mixed;
+ document.getElementById("bestLabel").innerText=w.best;
+ document.getElementById("next").innerText=w.next;
+ document.getElementById("resultTitle").innerText=w.result;
+ document.getElementById("again").innerText=w.again;
+ document.getElementById("aboutText").innerText=w.about;
+ document.getElementById("aboutTitle").innerText="About Us";
+ document.getElementById("best").innerText=localStorage.getItem("mindBest")||0;
+ if(document.getElementById("game").style.display==="block") showQuestion();
 }
 
 function start(type){
+ clearInterval(clock);
  if(type==="mixed"){
-  questions=[
-   ...data.logic.slice(0,8),
-   ...data.math.slice(0,6),
-   ...data.riddle.slice(0,6)
-  ];
+  questions=[...data.logic.slice(0,8),...data.math.slice(0,6),...data.riddle.slice(0,6)];
  }else{
   questions=[...data[type]];
  }
-
- index=0;
- points=0;
-
+ index=0;points=0;
  document.getElementById("home").style.display="none";
  document.getElementById("result").style.display="none";
  document.getElementById("game").style.display="block";
-
- document.getElementById("next").innerText=
- lang==="hi"?"अगला सवाल ➜":"Next Question ➜";
-
  showQuestion();
 }
 
 function showQuestion(){
  clearInterval(clock);
- locked=false;
- seconds=20;
-
- let q=questions[index];
-
+ locked=false;seconds=20;
+ const q=questions[index];
+ const qIndex={hi:0,en:1,mr:2}[lang];
+ const optIndex={hi:3,en:4,mr:5}[lang];
  document.getElementById("counter").innerText=
- (lang==="hi"?"सवाल ":"Question ")+
- (index+1)+"/"+questions.length;
-
+ words[lang].question+" "+(index+1)+"/"+questions.length;
  document.getElementById("timer").innerText=seconds;
-
- document.getElementById("progress").style.width=
- (index/questions.length*100)+"%";
-
- document.getElementById("question").innerText=
- q[lang==="hi"?0:1];
-
- document.getElementById("status").innerText="";
- document.getElementById("next").style.display="none";
-
- let area=document.getElementById("options");
- area.innerHTML="";
-
- q[lang==="hi"?2:3].forEach((option,i)=>{
-  let btn=document.createElement("button");
+ document.getElementById("question").innerText=q[qIndex];
+ document.getElementById("feedback").innerText="";
+ document.getElementById("bar").style.width=(index/questions.length*100)+"%";
+ const box=document.getElementById("options");
+ box.innerHTML="";
+ q[optIndex].forEach((option,i)=>{
+  const btn=document.createElement("button");
   btn.className="option";
-  btn.innerText=String.fromCharCode(65+i)+". "+option;
+  btn.innerText=option;
   btn.onclick=()=>answer(i);
-  area.appendChild(btn);
+  box.appendChild(btn);
  });
-
  clock=setInterval(()=>{
   seconds--;
   document.getElementById("timer").innerText=seconds;
-  if(seconds<=0)answer(-1);
+  if(seconds<=0){
+   clearInterval(clock);
+   if(!locked) answer(-1);
+  }
  },1000);
 }
 
 function answer(choice){
  if(locked)return;
-
  locked=true;
  clearInterval(clock);
-
- let q=questions[index];
- let correct=q[4];
- let buttons=document.querySelectorAll(".option");
-
- buttons.forEach((b,i)=>{
-  b.disabled=true;
-  if(i===correct)b.classList.add("correct");
- });
-
- if(choice===correct){
+ if(choice===questions[index][6]){
   points++;
-  document.getElementById("status").innerText=
-  lang==="hi"?"✓ सही जवाब!":"✓ Correct!";
+  document.getElementById("feedback").innerText=words[lang].correct;
  }else{
-  if(choice>=0)buttons[choice].classList.add("wrong");
-  document.getElementById("status").innerText=
-  (lang==="hi"?"सही जवाब: ":"Correct answer: ")+
-  q[lang==="hi"?2:3][correct];
+  document.getElementById("feedback").innerText=words[lang].wrong;
  }
-
- document.getElementById("progress").style.width=
- ((index+1)/questions.length*100)+"%";
-
- document.getElementById("next").style.display="inline-block";
-
- document.getElementById("next").innerText=
- index===questions.length-1?
- (lang==="hi"?"रिजल्ट देखें":"See Result"):
- (lang==="hi"?"अगला सवाल ➜":"Next Question ➜");
+ document.querySelectorAll(".option").forEach((b,i)=>{
+  b.disabled=true;
+  if(i===questions[index][6]) b.style.background="#b8efc2";
+ });
 }
 
 function nextQuestion(){
- if(locked===false)return;
-
+ if(!locked)return;
  if(index<questions.length-1){
   index++;
   showQuestion();
@@ -359,48 +259,29 @@ function nextQuestion(){
 
 function finish(){
  clearInterval(clock);
-
  document.getElementById("game").style.display="none";
  document.getElementById("result").style.display="block";
-
- document.getElementById("score").innerText=
- points+"/"+questions.length;
-
+ document.getElementById("score").innerText=points+"/"+questions.length;
  let best=Number(localStorage.getItem("mindBest")||0);
-
  if(points>best){
   best=points;
   localStorage.setItem("mindBest",best);
  }
-
- document.getElementById("best").innerText=best;
- document.getElementById("bestResult").innerText=best;
-
+ document.getElementById("bestResult").innerText=words[lang].bestResult+" "+best;
  document.getElementById("message").innerText=
- lang==="hi"?
- (points>=questions.length*0.8?
- "शानदार! आप बहुत अच्छा खेले।":
- points>=questions.length*0.5?
- "अच्छा प्रयास! फिर कोशिश करें।":
- "कोई बात नहीं! दोबारा खेलें।"):
- (points>=questions.length*0.8?
- "Excellent! Great job.":
- points>=questions.length*0.5?
- "Good effort! Try again.":
- "Keep practicing!");
+ points>=questions.length*.8?words[lang].excellent:
+ points>=questions.length*.5?words[lang].good:words[lang].poor;
 }
 
 function goHome(){
  clearInterval(clock);
-
- document.getElementById("game").style.display="none";
  document.getElementById("result").style.display="none";
+ document.getElementById("game").style.display="none";
  document.getElementById("home").style.display="block";
+ document.getElementById("best").innerText=localStorage.getItem("mindBest")||0;
 }
 
-document.getElementById("best").innerText=
-localStorage.getItem("mindBest")||0;
+changeLanguage();
 </script>
-
 </body>
 </html>
