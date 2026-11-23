@@ -202,27 +202,47 @@ function showQuestion(){
 
 function answer(choice){
  if(locked)return;
- locked=true;clearInterval(clock);
+ locked=true;
+ clearInterval(clock);
+
  let q=questions[index],correct=q[4];
  let buttons=document.querySelectorAll(".option");
+
  buttons.forEach((b,i)=>{
- b.disabled=true;
- if(i===correct)b.classList.add("correct");
+  b.disabled=true;
+  if(i===correct)b.classList.add("correct");
  });
+
  if(choice===correct){
- points++;
- document.getElementById("status").innerText=lang==="hi"?"✓ सही जवाब!":"✓ Correct!";
+  points++;
+  document.getElementById("status").innerText=
+  lang==="hi"?"✓ सही जवाब!":"✓ Correct!";
  }else{
- if(choice>=0)buttons[choice].classList.add("wrong");
- document.getElementById("status").innerText=
- (lang==="hi"?"सही जवाब: ":"Correct answer: ")+q[lang==="hi"?2:3][correct];
+  if(choice>=0)buttons[choice].classList.add("wrong");
+  document.getElementById("status").innerText=
+  (lang==="hi"?"सही जवाब: ":"Correct answer: ")+q[lang==="hi"?2:3][correct];
  }
- document.getElementById("progress").style.width=((index+1)*10)+"%";
+
+ document.getElementById("progress").style.width=
+ ((index+1)/questions.length*100)+"%";
+
  document.getElementById("next").style.display="inline-block";
- if(index===questions.length-1)(index===questions.length-document.getElementById("next").innerText=
- lang==="hi"?"रिजल्ट देखें":"See Result";
+
+ if(index===questions.length-1){
+  document.getElementById("next").innerText=
+  lang==="hi"?"रिजल्ट देखें":"See Result";
+ }
 }
 
+function nextQuestion(){
+ function nextQuestion(){
+ if(index < questions.length - 1){
+  index++;
+  showQuestion();
+ }else{
+  finish();
+ }
+ }
  
 
 function showQuestion(){
