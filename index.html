@@ -1,20 +1,24 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind Challenge</title>
+<meta name="theme-color" content="#11152e">
+<title>Mind Challenge - Brain Quiz</title>
+
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;padding:20px;
+ margin:0;padding:16px;
  font-family:Arial,sans-serif;
- background:linear-gradient(135deg,#11152e,#30205c);
+ background:linear-gradient(135deg,#10152e,#30205c);
  color:white;text-align:center;
 }
-.container{max-width:700px;margin:auto}
-header{padding:20px}
-h1{font-size:35px;color:#ffd166}
+.container{max-width:720px;margin:auto}
+header{padding:22px 10px}
+h1{color:#ffd166;font-size:34px}
+h2{line-height:1.4}
 .card{
  background:#202747;padding:22px;
  border-radius:20px;margin:18px 0;
@@ -28,28 +32,45 @@ button{
  cursor:pointer;
 }
 button:hover{background:#6048dd}
+button:disabled{opacity:.8;cursor:not-allowed}
 .option{
  display:block;width:100%;
  background:#344064;text-align:left;
+ margin:10px 0;
 }
-.option:disabled{opacity:1}
 .correct{background:#13875c!important}
 .wrong{background:#b33b58!important}
-input,select{
- padding:12px;border-radius:10px;
- border:0;font-size:16px;
-}
 #game,#result{display:none}
-#question{font-size:23px;line-height:1.5}
+#question{font-size:22px;line-height:1.5}
 #status{color:#ffd166;min-height:25px}
-.small{color:#bbc5e6}
+.small{color:#bbc5e6;line-height:1.6}
+#progress{
+ height:9px;width:0%;
+ background:#40d6bd;border-radius:8px;
+ transition:width .3s;
+}
+.progress-bg{
+ background:#394466;height:9px;
+ border-radius:8px;overflow:hidden;
+}
+.category{min-width:135px}
 .ad{
  border:1px dashed #8e9bc5;
  padding:18px;border-radius:12px;
  color:#c4c9df;margin:20px 0;
 }
+a{color:#60a5fa}
+footer{padding:15px}
+@media(max-width:480px){
+ body{padding:10px}
+ h1{font-size:29px}
+ .card{padding:16px}
+ button{font-size:15px}
+ #question{font-size:20px}
+}
 </style>
 </head>
+
 <body>
 <div class="container">
 
@@ -61,28 +82,34 @@ input,select{
 
 <div id="home" class="card">
 <h2 id="welcome">खेलना शुरू करें!</h2>
-<p id="description">पहेलियाँ हल करें और अपना स्कोर बढ़ाएँ।</p>
-
+<p id="description">मजेदार सवाल हल करें और अपना स्कोर बढ़ाएँ।</p>
 <h3 id="choose">अपनी कैटेगरी चुनें</h3>
-<button onclick="start('logic')">🧩 Logic</button>
-<button onclick="start('math')">➗ Math</button>
-<button onclick="start('riddle')">💡 Riddles</button>
-<button onclick="start('mixed')">⚡ Mixed Quiz</button>
 
-<p>🏆 Best Score: <b id="best">0</b></p>
+<button class="category" onclick="start('logic')">🧩 Logic</button>
+<button class="category" onclick="start('math')">➗ Math</button>
+<button class="category" onclick="start('riddle')">💡 Riddles</button>
+<button class="category" onclick="start('mixed')">⚡ Mixed Quiz</button>
+
+<p>🏆 <span id="bestLabel">Best Score</span>:
+<b id="best">0</b></p>
 </div>
 
 <div id="game" class="card">
 <p id="counter">Question 1/10</p>
 <p>⏱️ <span id="timer">20</span> sec</p>
-<div style="background:#394466;height:8px;border-radius:8px">
-<div id="progress" style="height:8px;width:0%;background:#40d6bd;border-radius:8px"></div>
+
+<div class="progress-bg">
+<div id="progress"></div>
 </div>
+
 <h2 id="question"></h2>
 <div id="options"></div>
 <p id="status"></p>
-<button id="next" onclick="nextQuestion()" style="display:none">Next ➜</button>
-<button onclick="goHome()">Home</button>
+
+<button id="next" onclick="nextQuestion()" style="display:none">
+अगला सवाल ➜
+</button>
+<button onclick="goHome()" id="homeButton">Home</button>
 </div>
 
 <div id="result" class="card">
@@ -90,21 +117,60 @@ input,select{
 <h2 id="resultTitle">आपका रिजल्ट</h2>
 <h1 id="score"></h1>
 <p id="message"></p>
-<button onclick="goHome()">Play Again</button>
+<p>🏆 <span id="bestResultLabel">Best Score</span>:
+<b id="bestResult">0</b></p>
+<button onclick="goHome()" id="againButton">Play Again</button>
 </div>
 
 <div class="ad">
 <strong>Advertisement Space</strong>
-<p>Ads will appear here after AdMob setup and approval.</p>
+<p>Ads can be added after advertising approval.</p>
 </div>
 
+<section class="card">
+<h2>About Mind Challenge</h2>
+<p>Welcome to Mind Challenge!</p>
+<p>यह एक मजेदार Quiz वेबसाइट है जहाँ आप Logic, Math और Riddles के सवाल हल कर सकते हैं।</p>
+</section>
+
+<section class="card">
+<h2>Contact Us</h2>
+<p>Email: <a href="mailto:ompanchal766@gmail.com">ompanchal766@gmail.com</a></p>
+</section>
+
+<section class="card">
+<h2>Privacy Policy</h2>
+<p>Mind Challenge पर Quiz खेलने के लिए अकाउंट बनाने की जरूरत नहीं है। आपका Best Score आपके ब्राउज़र में सेव होता है।</p>
+<p>भविष्य में विज्ञापन सेवाएँ जोड़ी जा सकती हैं। ऐसी सेवाएँ अपनी Cookies और Data Policy के अनुसार जानकारी का उपयोग कर सकती हैं।</p>
+</section>
+
+<section class="card">
+<h2>Disclaimer</h2>
+<p>यह वेबसाइट मनोरंजन और अभ्यास के लिए है। यह कोई वैज्ञानिक IQ टेस्ट नहीं है।</p>
+</section>
+
+<div style="margin:25px">
+<a href="https://buymeacoffee.com/ompanchal70"
+target="_blank" rel="noopener noreferrer"
+style="display:inline-block;background:#ffdd00;color:#000;padding:14px 25px;border-radius:12px;font-weight:bold;text-decoration:none">
+☕ Support Us
+</a>
+</div>
+
+<footer>
 <p class="small">© 2026 Mind Challenge | Play • Learn • Improve</p>
-<p class="small">यह मनोरंजन के लिए क्विज़ ऐप है, वैज्ञानिक IQ टेस्ट नहीं।</p>
+</footer>
+
 </div>
 
 <script>
-let lang="hi",questions=[],index=0,points=0;
-let seconds=20,clock=null,locked=false;
+let lang="hi";
+let questions=[];
+let index=0;
+let points=0;
+let seconds=20;
+let clock=null;
+let locked=false;
 
 const data={
 logic:[
@@ -114,17 +180,12 @@ logic:[
 ["एक कमरे के चार कोनों में एक-एक बिल्ली है। कुल कितनी?","Four corners have one cat each. How many cats?",["2","4","8","16"],["2","4","8","16"],1],
 ["कौन सी चीज जितनी सूखती है उतनी गीली होती है?","What gets wetter as it dries?",["तौलिया","कागज","साबुन","रेत"],["Towel","Paper","Soap","Sand"],0],
 ["किसके पास सिर और पूंछ है पर शरीर नहीं?","What has a head and a tail but no body?",["सिक्का","सांप","मछली","कंघी"],["Coin","Snake","Fish","Comb"],0],
-["वादा टूटता है लेकिन आवाज नहीं करता। यह क्या है?","What can be broken without a sound?",["कांच","वादा","लकड़ी","पत्थर"],["Glass","Promise","Wood","Stone"],1],
+["बिना आवाज के क्या टूट सकता है?","What can be broken without a sound?",["कांच","वादा","लकड़ी","पत्थर"],["Glass","Promise","Wood","Stone"],1],
 ["आपके पास 3 सेब हैं, 2 उठा लिए। कितने आपके पास हैं?","You take 2 apples from 3. How many do you have?",["1","2","3","5"],["1","2","3","5"],1],
 ["कौन हमेशा आता है लेकिन कभी पहुंचता नहीं?","What is always coming but never arrives?",["कल","आज","सुबह","रात"],["Tomorrow","Today","Morning","Night"],0],
-["पहले क्या जलाएंगे: मोमबत्ती या माचिस?","What do you light first: candle or match?",["मोमबत्ती","माचिस","दोनों","कुछ नहीं"],["Candle","Match","Both","Nothing"],
-1],
-["दो पिता और दो बेटे हैं, लेकिन कुल तीन लोग हैं। कैसे?","There are two fathers and two sons, but only three people. How?",["दादा, पिता और बेटा","तीन भाई","चार लोग","दो दोस्त"],["Grandfather, father and son","Three brothers","Four people","Two friends"],0],
-["राम की मां के चार बच्चे हैं। तीन के नाम उत्तर, दक्षिण और पूर्व हैं। चौथे का नाम क्या है?","A mother has four children. Three are North, South and East. What is the fourth child's name?",["पश्चिम","राम","मोहन","सोहन"],["West","Ram","Mohan","Sohan"],1],
-["5 बच्चों को एक-एक आम दिया, फिर भी टोकरी में एक आम बचा। कैसे?","Five children each got a mango, yet one mango remained in the basket.",["आखिरी बच्चे को टोकरी सहित आम दिया","एक आम छिपाया","दो आम दिए","गलत गिनती"],["The last child got the basket with the mango","One was hidden","Two were given","Wrong counting"],0],
-["एक आदमी बारिश में बिना छाते चला, फिर भी उसके बाल गीले नहीं हुए। क्यों?","A man walked in the rain without an umbrella, but his hair did not get wet.",["वह गंजा था","बारिश नहीं थी","वह घर में था","उसके पास छाता था"],["He was bald","There was no rain","He was indoors","He had an umbrella"],0],
-["एक साल में कितने महीने ऐसे हैं जिनमें 30 दिन होते हैं?","How many months have exactly 30 days?",["2","3","4","5"],["2","3","4","5"],2]
+["पहले क्या जलाएंगे: मोमबत्ती या माचिस?","What do you light first: candle or match?",["मोमबत्ती","माचिस","दोनों","कुछ नहीं"],["Candle","Match","Both","Nothing"],1]
 ],
+
 math:[
 ["12 × 3 कितना है?","What is 12 × 3?",["30","36","32","40"],["30","36","32","40"],1],
 ["100 - 25 कितना है?","What is 100 - 25?",["65","75","85","70"],["65","75","85","70"],1],
@@ -137,6 +198,7 @@ math:[
 ["सबसे छोटी अभाज्य संख्या?","Smallest prime number?",["0","1","2","3"],["0","1","2","3"],2],
 ["एक घंटे में कितने मिनट?","Minutes in one hour?",["30","45","60","100"],["30","45","60","100"],2]
 ],
+
 riddle:[
 ["मेरे दांत हैं, पर काट नहीं सकता। मैं कौन?","I have teeth but cannot bite. What am I?",["शेर","कंघी","कुत्ता","मछली"],["Lion","Comb","Dog","Fish"],1],
 ["बिना पंख के उड़ता है और बिना आंखों के रोता है।","Flies without wings and cries without eyes.",["बादल","पेड़","पत्थर","किताब"],["Cloud","Tree","Stone","Book"],0],
@@ -144,7 +206,7 @@ riddle:[
 ["आपकी कौन सी चीज दूसरे ज्यादा इस्तेमाल करते हैं?","What do others use more than you do?",["नाम","जूते","फोन","घर"],["Name","Shoes","Phone","House"],0],
 ["किसके पास बहुत सारी चाबियां हैं पर ताला नहीं खोलता?","What has many keys but opens no locks?",["दरवाजा","कीबोर्ड","बैग","ताला"],["Door","Keyboard","Bag","Lock"],1],
 ["कौन सी चीज ऊपर जाती है नीचे नहीं आती?","What goes up but never comes down?",["उम्र","गुब्बारा","लिफ्ट","धुआं"],["Age","Balloon","Lift","Smoke"],0],
-["पानी में पैदा होता है और पानी में मर जाता है।","Born in water and dies in water.",["नमक","मछली","पेड़","पक्षी"],["Salt","Fish","Tree","Bird"],0],
+["पानी में घुल जाता है और स्वाद बदल देता है।","It dissolves in water and changes its taste.",["नमक","पत्थर","लकड़ी","कागज"],["Salt","Stone","Wood","Paper"],0],
 ["कौन सा बैंक पैसा नहीं रखता?","Which bank does not keep money?",["नदी का किनारा","स्टेट बैंक","ATM","पोस्ट ऑफिस"],["River bank","State bank","ATM","Post office"],0],
 ["बिना पैरों के चलता है।","Moves without legs.",["घड़ी","कुर्सी","मेज","कप"],["Clock","Chair","Table","Cup"],0],
 ["किसकी आवाज है पर शरीर नहीं?","What has a voice but no body?",["गूंज","किताब","पत्थर","कप"],["Echo","Book","Stone","Cup"],0]
@@ -153,59 +215,108 @@ riddle:[
 
 function changeLanguage(){
  lang=lang==="hi"?"en":"hi";
- document.getElementById("tagline").innerText=lang==="hi"?"अपने दिमाग को चुनौती दें!":"Challenge your brain!";
- document.getElementById("welcome").innerText=lang==="hi"?"खेलना शुरू करें!":"Start Playing!";
- document.getElementById("description").innerText=lang==="hi"?"पहेलियाँ हल करें और अपना स्कोर बढ़ाएँ।":"Solve puzzles and improve your score.";
- document.getElementById("choose").innerText=lang==="hi"?"अपनी कैटेगरी चुनें":"Choose a category";
- document.getElementById("next").innerText=lang==="hi"?"अगला सवाल ➜":"Next Question ➜";
- document.getElementById("resultTitle").innerText=lang==="hi"?"आपका रिजल्ट":"Your Result";
- if(document.getElementById("game").style.display==="block")showQuestion();
+
+ document.getElementById("tagline").innerText=
+ lang==="hi"?"अपने दिमाग को चुनौती दें!":"Challenge your brain!";
+
+ document.getElementById("welcome").innerText=
+ lang==="hi"?"खेलना शुरू करें!":"Start Playing!";
+
+ document.getElementById("description").innerText=
+ lang==="hi"?"मजेदार सवाल हल करें और अपना स्कोर बढ़ाएँ।":"Solve fun questions and improve your score.";
+
+ document.getElementById("choose").innerText=
+ lang==="hi"?"अपनी कैटेगरी चुनें":"Choose a category";
+
+ document.getElementById("bestLabel").innerText=
+ lang==="hi"?"सर्वश्रेष्ठ स्कोर":"Best Score";
+
+ document.getElementById("homeButton").innerText=
+ lang==="hi"?"होम":"Home";
+
+ document.getElementById("againButton").innerText=
+ lang==="hi"?"फिर खेलें":"Play Again";
+
+ document.getElementById("resultTitle").innerText=
+ lang==="hi"?"आपका रिजल्ट":"Your Result";
+
+ if(document.getElementById("game").style.display==="block"){
+  showQuestion();
+ }
 }
 
 function start(type){
- questions=type==="mixed"?
- [...data.logic.slice(0,8),...data.math.slice(0,6),...data.riddle.slice(0,6)]:
- [...data[type]];
- index=0;points=0;
+ if(type==="mixed"){
+  questions=[
+   ...data.logic.slice(0,8),
+   ...data.math.slice(0,6),
+   ...data.riddle.slice(0,6)
+  ];
+ }else{
+  questions=[...data[type]];
+ }
+
+ index=0;
+ points=0;
+
  document.getElementById("home").style.display="none";
  document.getElementById("result").style.display="none";
  document.getElementById("game").style.display="block";
+
+ document.getElementById("next").innerText=
+ lang==="hi"?"अगला सवाल ➜":"Next Question ➜";
+
  showQuestion();
 }
 
 function showQuestion(){
  clearInterval(clock);
- locked=false;seconds=20;
+ locked=false;
+ seconds=20;
+
  let q=questions[index];
+
  document.getElementById("counter").innerText=
- (lang==="hi"?"सवाल ":"Question ")+(index+1)+"/"+questions.length;
+ (lang==="hi"?"सवाल ":"Question ")+
+ (index+1)+"/"+questions.length;
+
  document.getElementById("timer").innerText=seconds;
- document.getElementById("question").innerText=q[lang==="hi"?0:1];
- document.getElementById("progress").style.width=(index/questions.length*100)+"%";
+
+ document.getElementById("progress").style.width=
+ (index/questions.length*100)+"%";
+
+ document.getElementById("question").innerText=
+ q[lang==="hi"?0:1];
+
  document.getElementById("status").innerText="";
  document.getElementById("next").style.display="none";
+
  let area=document.getElementById("options");
  area.innerHTML="";
+
  q[lang==="hi"?2:3].forEach((option,i)=>{
- let btn=document.createElement("button");
- btn.className="option";
- btn.innerText=String.fromCharCode(65+i)+". "+option;
- btn.onclick=()=>answer(i);
- area.appendChild(btn);
+  let btn=document.createElement("button");
+  btn.className="option";
+  btn.innerText=String.fromCharCode(65+i)+". "+option;
+  btn.onclick=()=>answer(i);
+  area.appendChild(btn);
  });
+
  clock=setInterval(()=>{
- seconds--;
- document.getElementById("timer").innerText=seconds;
- if(seconds<=0)answer(-1);
+  seconds--;
+  document.getElementById("timer").innerText=seconds;
+  if(seconds<=0)answer(-1);
  },1000);
 }
 
 function answer(choice){
  if(locked)return;
+
  locked=true;
  clearInterval(clock);
 
- let q=questions[index],correct=q[4];
+ let q=questions[index];
+ let correct=q[4];
  let buttons=document.querySelectorAll(".option");
 
  buttons.forEach((b,i)=>{
@@ -220,7 +331,8 @@ function answer(choice){
  }else{
   if(choice>=0)buttons[choice].classList.add("wrong");
   document.getElementById("status").innerText=
-  (lang==="hi"?"सही जवाब: ":"Correct answer: ")+q[lang==="hi"?2:3][correct];
+  (lang==="hi"?"सही जवाब: ":"Correct answer: ")+
+  q[lang==="hi"?2:3][correct];
  }
 
  document.getElementById("progress").style.width=
@@ -228,535 +340,67 @@ function answer(choice){
 
  document.getElementById("next").style.display="inline-block";
 
- if(index===questions.length-1){
-  document.getElementById("next").innerText=
-  lang==="hi"?"रिजल्ट देखें":"See Result";
- }
-}
-
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind Challenge</title>
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;padding:20px;
- font-family:Arial,sans-serif;
- background:linear-gradient(135deg,#11152e,#30205c);
- color:white;text-align:center;
-}
-.container{max-width:700px;margin:auto}
-header{padding:20px}
-h1{font-size:35px;color:#ffd166}
-.card{
- background:#202747;padding:22px;
- border-radius:20px;margin:18px 0;
- box-shadow:0 8px 25px #0005;
-}
-button{
- padding:13px 18px;margin:7px;
- border:0;border-radius:12px;
- background:#8067ff;color:white;
- font-size:16px;font-weight:bold;
- cursor:pointer;
-}
-button:hover{background:#6048dd}
-.option{
- display:block;width:100%;
- background:#344064;text-align:left;
-}
-.option:disabled{opacity:1}
-.correct{background:#13875c!important}
-.wrong{background:#b33b58!important}
-input,select{
- padding:12px;border-radius:10px;
- border:0;font-size:16px;
-}
-#game,#result{display:none}
-#question{font-size:23px;line-height:1.5}
-#status{color:#ffd166;min-height:25px}
-.small{color:#bbc5e6}
-.ad{
- border:1px dashed #8e9bc5;
- padding:18px;border-radius:12px;
- color:#c4c9df;margin:20px 0;
-}
-</style>
-</head>
-<body>
-<div class="container">
-
-<header>
-<h1>🧠 Mind Challenge</h1>
-<p id="tagline">अपने दिमाग को चुनौती दें!</p>
-<button onclick="changeLanguage()">हिंदी / English</button>
-</header>
-
-<div id="home" class="card">
-<h2 id="welcome">खेलना शुरू करें!</h2>
-<p id="description">पहेलियाँ हल करें और अपना स्कोर बढ़ाएँ।</p>
-
-<h3 id="choose">अपनी कैटेगरी चुनें</h3>
-<button onclick="start('logic')">🧩 Logic</button>
-<button onclick="start('math')">➗ Math</button>
-<button onclick="start('riddle')">💡 Riddles</button>
-<button onclick="start('mixed')">⚡ Mixed Quiz</button>
-
-<p>🏆 Best Score: <b id="best">0</b></p>
-</div>
-
-<div id="game" class="card">
-<p id="counter">Question 1/10</p>
-<p>⏱️ <span id="timer">20</span> sec</p>
-<div style="background:#394466;height:8px;border-radius:8px">
-<div id="progress" style="height:8px;width:0%;background:#40d6bd;border-radius:8px"></div>
-</div>
-<h2 id="question"></h2>
-<div id="options"></div>
-<p id="status"></p>
-<button id="next" onclick="nextQuestion()" style="display:none">Next ➜</button>
-<button onclick="goHome()">Home</button>
-</div>
-
-<div id="result" class="card">
-<h1>🏆</h1>
-<h2 id="resultTitle">आपका रिजल्ट</h2>
-<h1 id="score"></h1>
-<p id="message"></p>
-<button onclick="goHome()">Play Again</button>
-</div>
-
-<div class="ad">
-<strong>Advertisement Space</strong>
-<p>Ads will appear here after AdMob setup and approval.</p>
-</div>
-
-<p class="small">© 2026 Mind Challenge | Play • Learn • Improve</p>
-<p class="small">यह मनोरंजन के लिए क्विज़ ऐप है, वैज्ञानिक IQ टेस्ट नहीं।</p>
-</div>
-
-<script>
-let lang="hi",questions=[],index=0,points=0;
-let seconds=20,clock=null,locked=false;
-
-const data={
-logic:[
-["एक किलो रूई और एक किलो लोहा, कौन भारी?","Which is heavier: 1 kg cotton or 1 kg iron?",["रूई","लोहा","दोनों बराबर","पता नहीं"],["Cotton","Iron","Equal","Not sure"],2],
-["दौड़ में दूसरे नंबर वाले को पीछे छोड़ा। अब आप कौन से नंबर पर हैं?","You pass the runner in second place. What place are you in?",["पहले","दूसरे","तीसरे","चौथे"],["First","Second","Third","Fourth"],1],
-["किस महीने में 28 दिन होते हैं?","Which month has 28 days?",["फरवरी","सभी महीने","जनवरी","मार्च"],["February","All months","January","March"],1],
-["एक कमरे के चार कोनों में एक-एक बिल्ली है। कुल कितनी?","Four corners have one cat each. How many cats?",["2","4","8","16"],["2","4","8","16"],1],
-["कौन सी चीज जितनी सूखती है उतनी गीली होती है?","What gets wetter as it dries?",["तौलिया","कागज","साबुन","रेत"],["Towel","Paper","Soap","Sand"],0],
-["किसके पास सिर और पूंछ है पर शरीर नहीं?","What has a head and a tail but no body?",["सिक्का","सांप","मछली","कंघी"],["Coin","Snake","Fish","Comb"],0],
-["वादा टूटता है लेकिन आवाज नहीं करता। यह क्या है?","What can be broken without a sound?",["कांच","वादा","लकड़ी","पत्थर"],["Glass","Promise","Wood","Stone"],1],
-["आपके पास 3 सेब हैं, 2 उठा लिए। कितने आपके पास हैं?","You take 2 apples from 3. How many do you have?",["1","2","3","5"],["1","2","3","5"],1],
-["कौन हमेशा आता है लेकिन कभी पहुंचता नहीं?","What is always coming but never arrives?",["कल","आज","सुबह","रात"],["Tomorrow","Today","Morning","Night"],0],
-["पहले क्या जलाएंगे: मोमबत्ती या माचिस?","What do you light first: candle or match?",["मोमबत्ती","माचिस","दोनों","कुछ नहीं"],["Candle","Match","Both","Nothing"],
-1],
-["दो पिता और दो बेटे हैं, लेकिन कुल तीन लोग हैं। कैसे?","There are two fathers and two sons, but only three people. How?",["दादा, पिता और बेटा","तीन भाई","चार लोग","दो दोस्त"],["Grandfather, father and son","Three brothers","Four people","Two friends"],0],
-["राम की मां के चार बच्चे हैं। तीन के नाम उत्तर, दक्षिण और पूर्व हैं। चौथे का नाम क्या है?","A mother has four children. Three are North, South and East. What is the fourth child's name?",["पश्चिम","राम","मोहन","सोहन"],["West","Ram","Mohan","Sohan"],1],
-["5 बच्चों को एक-एक आम दिया, फिर भी टोकरी में एक आम बचा। कैसे?","Five children each got a mango, yet one mango remained in the basket.",["आखिरी बच्चे को टोकरी सहित आम दिया","एक आम छिपाया","दो आम दिए","गलत गिनती"],["The last child got the basket with the mango","One was hidden","Two were given","Wrong counting"],0],
-["एक आदमी बारिश में बिना छाते चला, फिर भी उसके बाल गीले नहीं हुए। क्यों?","A man walked in the rain without an umbrella, but his hair did not get wet.",["वह गंजा था","बारिश नहीं थी","वह घर में था","उसके पास छाता था"],["He was bald","There was no rain","He was indoors","He had an umbrella"],0],
-["एक साल में कितने महीने ऐसे हैं जिनमें 30 दिन होते हैं?","How many months have exactly 30 days?",["2","3","4","5"],["2","3","4","5"],2]
-],
-math:[
-["12 × 3 कितना है?","What is 12 × 3?",["30","36","32","40"],["30","36","32","40"],1],
-["100 - 25 कितना है?","What is 100 - 25?",["65","75","85","70"],["65","75","85","70"],1],
-["9 का वर्ग कितना है?","What is 9 squared?",["18","72","81","99"],["18","72","81","99"],2],
-["2, 4, 8, 16, अगला नंबर?","2, 4, 8, 16, next?",["20","24","30","32"],["20","24","30","32"],3],
-["एक दर्जन में कितने होते हैं?","How many in a dozen?",["10","12","14","16"],["10","12","14","16"],1],
-["50 का आधा + 10 कितना?","Half of 50 + 10?",["25","30","35","40"],["25","30","35","40"],2],
-["15 + 17 कितना है?","What is 15 + 17?",["30","31","32","33"],["30","31","32","33"],2],
-["5 × 5 - 5 कितना?","What is 5 × 5 - 5?",["15","20","25","30"],["15","20","25","30"],1],
-["सबसे छोटी अभाज्य संख्या?","Smallest prime number?",["0","1","2","3"],["0","1","2","3"],2],
-["एक घंटे में कितने मिनट?","Minutes in one hour?",["30","45","60","100"],["30","45","60","100"],2]
-],
-riddle:[
-["मेरे दांत हैं, पर काट नहीं सकता। मैं कौन?","I have teeth but cannot bite. What am I?",["शेर","कंघी","कुत्ता","मछली"],["Lion","Comb","Dog","Fish"],1],
-["बिना पंख के उड़ता है और बिना आंखों के रोता है।","Flies without wings and cries without eyes.",["बादल","पेड़","पत्थर","किताब"],["Cloud","Tree","Stone","Book"],0],
-["जितना निकालो उतना बड़ा होता जाता है।","The more you take away, the bigger it gets.",["गड्ढा","पैसा","पेड़","घर"],["Hole","Money","Tree","House"],0],
-["आपकी कौन सी चीज दूसरे ज्यादा इस्तेमाल करते हैं?","What do others use more than you do?",["नाम","जूते","फोन","घर"],["Name","Shoes","Phone","House"],0],
-["किसके पास बहुत सारी चाबियां हैं पर ताला नहीं खोलता?","What has many keys but opens no locks?",["दरवाजा","कीबोर्ड","बैग","ताला"],["Door","Keyboard","Bag","Lock"],1],
-["कौन सी चीज ऊपर जाती है नीचे नहीं आती?","What goes up but never comes down?",["उम्र","गुब्बारा","लिफ्ट","धुआं"],["Age","Balloon","Lift","Smoke"],0],
-["पानी में पैदा होता है और पानी में मर जाता है।","Born in water and dies in water.",["नमक","मछली","पेड़","पक्षी"],["Salt","Fish","Tree","Bird"],0],
-["कौन सा बैंक पैसा नहीं रखता?","Which bank does not keep money?",["नदी का किनारा","स्टेट बैंक","ATM","पोस्ट ऑफिस"],["River bank","State bank","ATM","Post office"],0],
-["बिना पैरों के चलता है।","Moves without legs.",["घड़ी","कुर्सी","मेज","कप"],["Clock","Chair","Table","Cup"],0],
-["किसकी आवाज है पर शरीर नहीं?","What has a voice but no body?",["गूंज","किताब","पत्थर","कप"],["Echo","Book","Stone","Cup"],0]
-]
-};
-
-function changeLanguage(){
- lang=lang==="hi"?"en":"hi";
- document.getElementById("tagline").innerText=lang==="hi"?"अपने दिमाग को चुनौती दें!":"Challenge your brain!";
- document.getElementById("welcome").innerText=lang==="hi"?"खेलना शुरू करें!":"Start Playing!";
- document.getElementById("description").innerText=lang==="hi"?"पहेलियाँ हल करें और अपना स्कोर बढ़ाएँ।":"Solve puzzles and improve your score.";
- document.getElementById("choose").innerText=lang==="hi"?"अपनी कैटेगरी चुनें":"Choose a category";
- document.getElementById("next").innerText=lang==="hi"?"अगला सवाल ➜":"Next Question ➜";
- document.getElementById("resultTitle").innerText=lang==="hi"?"आपका रिजल्ट":"Your Result";
- if(document.getElementById("game").style.display==="block")showQuestion();
-}
-
-function start(type){
- questions=type==="mixed"?
- [...data.logic.slice(0,8),...data.math.slice(0,6),...data.riddle.slice(0,6)]:
- [...data[type]];
- index=0;points=0;
- document.getElementById("home").style.display="none";
- document.getElementById("result").style.display="none";
- document.getElementById("game").style.display="block";
- showQuestion();
-}
-
-function showQuestion(){
- clearInterval(clock);
- locked=false;seconds=20;
- let q=questions[index];
- document.getElementById("counter").innerText=
- (lang==="hi"?"सवाल ":"Question ")+(index+1)+"/"+questions.length;
- document.getElementById("timer").innerText=seconds;
- document.getElementById("question").innerText=q[lang==="hi"?0:1];
- document.getElementById("progress").style.width=(index/questions.length*100)+"%";
- document.getElementById("status").innerText="";
- document.getElementById("next").style.display="none";
- let area=document.getElementById("options");
- area.innerHTML="";
- q[lang==="hi"?2:3].forEach((option,i)=>{
- let btn=document.createElement("button");
- btn.className="option";
- btn.innerText=String.fromCharCode(65+i)+". "+option;
- btn.onclick=()=>answer(i);
- area.appendChild(btn);
- });
- clock=setInterval(()=>{
- seconds--;
- document.getElementById("timer").innerText=seconds;
- if(seconds<=0)answer(-1);
- },1000);
-}
-
-function answer(choice){
- if(locked)return;
- locked=true;
- clearInterval(clock);
-
- let q=questions[index],correct=q[4];
- let buttons=document.querySelectorAll(".option");
-
- buttons.forEach((b,i)=>{
-  b.disabled=true;
-  if(i===correct)b.classList.add("correct");
- });
-
- if(choice===correct){
-  points++;
-  document.getElementById("status").innerText=
-  lang==="hi"?"✓ सही जवाब!":"✓ Correct!";
- }else{
-  if(choice>=0)buttons[choice].classList.add("wrong");
-  document.getElementById("status").innerText=
-  (lang==="hi"?"सही जवाब: ":"Correct answer: ")+q[lang==="hi"?2:3][correct];
- }
-
- document.getElementById("progress").style.width=
- ((index+1)/questions.length*100)+"%";
-
- document.getElementById("next").style.display="inline-block";
-
- if(index===questions.length-1){
-  document.getElementById("next").innerText=
-  lang==="hi"?"रिजल्ट देखें":"See Result";
- }
+ document.getElementById("next").innerText=
+ index===questions.length-1?
+ (lang==="hi"?"रिजल्ट देखें":"See Result"):
+ (lang==="hi"?"अगला सवाल ➜":"Next Question ➜");
 }
 
 function nextQuestion(){
- function nextQuestion(){
- if(index < questions.length - 1){
+ if(locked===false)return;
+
+ if(index<questions.length-1){
   index++;
   showQuestion();
  }else{
   finish();
  }
+}
+
+function finish(){
+ clearInterval(clock);
+
+ document.getElementById("game").style.display="none";
+ document.getElementById("result").style.display="block";
+
+ document.getElementById("score").innerText=
+ points+"/"+questions.length;
+
+ let best=Number(localStorage.getItem("mindBest")||0);
+
+ if(points>best){
+  best=points;
+  localStorage.setItem("mindBest",best);
  }
- 
 
-function showQuestion(){
- clearInterval(clock);
- locked=false;
- seconds=20;
-
- let q=questions[index];
-
- document.getElementById("counter").innerText=
- (lang==="hi"?"सवाल ":"Question ")+
- (index+1)+"/"+questions.length;
-
- document.getElementById("timer").innerText=seconds;
-
- document.getElementById("progress").style.width=
- (index/questions.length*100)+"%";
-
- document.getElementById("question").innerText=
- q[lang==="hi"?0:1];
-
- document.getElementById("status").innerText="";
- document.getElementById("next").style.display="none";
-
- let area=document.getElementById("options");
- area.innerHTML="";
-
- q[lang==="hi"?2:3].forEach((option,i)=>{
-  let btn=document.createElement("button");
-  btn.className="option";
-  btn.innerText=String.fromCharCode(65+i)+". "+option;
-  btn.onclick=()=>answer(i);
-  area.appendChild(btn);
- });
-
- clock=setInterval(()=>{
-  seconds--;
-  document.getElementById("timer").innerText=seconds;
-  if(seconds<=0)answer(-1);
- },1000);
-}
- 
-
-function finish(){
- clearInterval(clock);
- document.getElementById("game").style.display="none";
- document.getElementById("result").style.display="block";
- document.getElementById("score").innerText=points+"/"+questions.length;
- let best=Number(localStorage.getItem("mindBest")||0);
- if(points>best){best=points;localStorage.setItem("mindBest",best);}
  document.getElementById("best").innerText=best;
+ document.getElementById("bestResult").innerText=best;
+
  document.getElementById("message").innerText=
  lang==="hi"?
- (points>=questions.length*0.8?"शानदार! आप बहुत अच्छा खेले।":points>=questions.length*0.5?"अच्छा प्रयास! फिर कोशिश करें।":"कोई बात नहीं! दोबारा खेलें।"):
- 
-}(points>=questions.length*0.8?"Excellent! Great job.":points>=questions.length*0.5?"Good effort! Try again.":"Keep practicing!");
+ (points>=questions.length*0.8?
+ "शानदार! आप बहुत अच्छा खेले।":
+ points>=questions.length*0.5?
+ "अच्छा प्रयास! फिर कोशिश करें।":
+ "कोई बात नहीं! दोबारा खेलें।"):
+ (points>=questions.length*0.8?
+ "Excellent! Great job.":
+ points>=questions.length*0.5?
+ "Good effort! Try again.":
+ "Keep practicing!");
+}
 
 function goHome(){
  clearInterval(clock);
+
  document.getElementById("game").style.display="none";
  document.getElementById("result").style.display="none";
  document.getElementById("home").style.display="block";
 }
-document.getElementById("best").innerText=localStorage.getItem("mindBest")||0;
+
+document.getElementById("best").innerText=
+localStorage.getItem("mindBest")||0;
 </script>
- 
-<section id="about" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;text-align:center;font-family:Arial;">
-  <h2>About Mind Challenge</h2>
-  <p>Welcome to Mind Challenge!</p>
-  <p>यह एक मजेदार Quiz वेबसाइट है, जहाँ आप Logic, Math और Riddles के सवाल हल करके अपनी सोचने की क्षमता का अभ्यास कर सकते हैं।</p>
-  <p>हमारा उद्देश्य सीखने को मजेदार बनाना है।</p>
-</section>
- 
-<section id="contact" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;text-align:center;font-family:Arial;">
-  <h2>Contact Us</h2>
-  <p>Have any questions or suggestions? Contact us!</p>
-  <p>Email:</p>
-  <a href="mailto:ompanchal766@gmail.com" style="color:#60a5fa;font-size:18px;">
-    ompanchal766@gmail.com
-  </a>
-  <p>We would love to hear from you!</p>
-</section>
-<section id="privacy" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;font-family:Arial;line-height:1.7;">
-  <h2 style="text-align:center;">Privacy Policy</h2>
-  <p>Welcome to Mind Challenge. Your privacy is important to us.</p>
 
-  <h3>Information We Collect</h3>
-  <p>Mind Challenge does not ask users to create an account or provide personal information to play quizzes.</p>
-
-  <h3>Quiz Scores</h3>
-  <p>Your best score may be saved locally in your browser using local storage.</p>
-
-  <h3>Contact</h3>
-  <p>If you contact us by email, you choose what information to share.</p>
-  <p>Email: ompanchal766@gmail.com</p>
-
-  <h3>Advertisements</h3>
-  <p>We may display third-party advertisements in the future. If advertising services are added, this policy will be updated to explain their use of cookies and data.</p>
-
-  <h3>Policy Updates</h3>
-  <p>We may update this Privacy Policy when our website changes.</p>
-</section>
- 
-<section id="disclaimer" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;font-family:Arial;line-height:1.7;">
-  <h2 style="text-align:center;">Disclaimer</h2>
-
-  <p>Welcome to Mind Challenge!</p>
-
-  <p>All quizzes and questions on this website are provided for entertainment and educational practice purposes only.</p>
-
-  <p>Mind Challenge is not a scientific IQ test and does not measure a person's actual intelligence.</p>
-
-  <p>We try to provide accurate questions and answers, but we do not guarantee that all content is error-free.</p>
-
-  <p>Users participate in quizzes at their own choice and responsibility.</p>
-
-  <p>For questions, contact us at:</p>
-
-  <p>Email: ompanchal766@gmail.com</p>
-</section>
- 
-<!-- Buy Me a Coffee Support Button -->
-<div style="text-align:center; margin:25px auto;">
-  <a href="https://buymeacoffee.com/ompanchal70"
-     target="_blank"
-     rel="noopener noreferrer"
-     style="display:inline-block;
-            background:#ffdd00;
-            color:#000;
-            padding:14px 28px;
-            border-radius:12px;
-            font-size:18px;
-            font-weight:bold;
-            text-decoration:none;">
-    ☕ Support Us
-  </a>
-</div>
- 
 </body>
-  </html>
- 
-
-function showQuestion(){
- clearInterval(clock);
- locked=false;
- seconds=20;
-
- let q=questions[index];
-
- document.getElementById("counter").innerText=
- (lang==="hi"?"सवाल ":"Question ")+
- (index+1)+"/"+questions.length;
-
- document.getElementById("timer").innerText=seconds;
-
- document.getElementById("progress").style.width=
- (index/questions.length*100)+"%";
-
- document.getElementById("question").innerText=
- q[lang==="hi"?0:1];
-
- document.getElementById("status").innerText="";
- document.getElementById("next").style.display="none";
-
- let area=document.getElementById("options");
- area.innerHTML="";
-
- q[lang==="hi"?2:3].forEach((option,i)=>{
-  let btn=document.createElement("button");
-  btn.className="option";
-  btn.innerText=String.fromCharCode(65+i)+". "+option;
-  btn.onclick=()=>answer(i);
-  area.appendChild(btn);
- });
-
- clock=setInterval(()=>{
-  seconds--;
-  document.getElementById("timer").innerText=seconds;
-  if(seconds<=0)answer(-1);
- },1000);
-}
- 
-
-function finish(){
- clearInterval(clock);
- document.getElementById("game").style.display="none";
- document.getElementById("result").style.display="block";
- document.getElementById("score").innerText=points+"/"+questions.length;
- let best=Number(localStorage.getItem("mindBest")||0);
- if(points>best){best=points;localStorage.setItem("mindBest",best);}
- document.getElementById("best").innerText=best;
- document.getElementById("message").innerText=
- lang==="hi"?
- (points>=questions.length*0.8?"शानदार! आप बहुत अच्छा खेले।":points>=questions.length*0.5?"अच्छा प्रयास! फिर कोशिश करें।":"कोई बात नहीं! दोबारा खेलें।"):
- 
-}(points>=questions.length*0.8?"Excellent! Great job.":points>=questions.length*0.5?"Good effort! Try again.":"Keep practicing!");
-
-function goHome(){
- clearInterval(clock);
- document.getElementById("game").style.display="none";
- document.getElementById("result").style.display="none";
- document.getElementById("home").style.display="block";
-}
-document.getElementById("best").innerText=localStorage.getItem("mindBest")||0;
-</script>
- 
-<section id="about" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;text-align:center;font-family:Arial;">
-  <h2>About Mind Challenge</h2>
-  <p>Welcome to Mind Challenge!</p>
-  <p>यह एक मजेदार Quiz वेबसाइट है, जहाँ आप Logic, Math और Riddles के सवाल हल करके अपनी सोचने की क्षमता का अभ्यास कर सकते हैं।</p>
-  <p>हमारा उद्देश्य सीखने को मजेदार बनाना है।</p>
-</section>
- 
-<section id="contact" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;text-align:center;font-family:Arial;">
-  <h2>Contact Us</h2>
-  <p>Have any questions or suggestions? Contact us!</p>
-  <p>Email:</p>
-  <a href="mailto:ompanchal766@gmail.com" style="color:#60a5fa;font-size:18px;">
-    ompanchal766@gmail.com
-  </a>
-  <p>We would love to hear from you!</p>
-</section>
-<section id="privacy" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;font-family:Arial;line-height:1.7;">
-  <h2 style="text-align:center;">Privacy Policy</h2>
-  <p>Welcome to Mind Challenge. Your privacy is important to us.</p>
-
-  <h3>Information We Collect</h3>
-  <p>Mind Challenge does not ask users to create an account or provide personal information to play quizzes.</p>
-
-  <h3>Quiz Scores</h3>
-  <p>Your best score may be saved locally in your browser using local storage.</p>
-
-  <h3>Contact</h3>
-  <p>If you contact us by email, you choose what information to share.</p>
-  <p>Email: ompanchal766@gmail.com</p>
-
-  <h3>Advertisements</h3>
-  <p>We may display third-party advertisements in the future. If advertising services are added, this policy will be updated to explain their use of cookies and data.</p>
-
-  <h3>Policy Updates</h3>
-  <p>We may update this Privacy Policy when our website changes.</p>
-</section>
- 
-<section id="disclaimer" style="padding:25px;margin:20px auto;max-width:800px;background:#172554;color:white;border-radius:15px;font-family:Arial;line-height:1.7;">
-  <h2 style="text-align:center;">Disclaimer</h2>
-
-  <p>Welcome to Mind Challenge!</p>
-
-  <p>All quizzes and questions on this website are provided for entertainment and educational practice purposes only.</p>
-
-  <p>Mind Challenge is not a scientific IQ test and does not measure a person's actual intelligence.</p>
-
-  <p>We try to provide accurate questions and answers, but we do not guarantee that all content is error-free.</p>
-
-  <p>Users participate in quizzes at their own choice and responsibility.</p>
-
-  <p>For questions, contact us at:</p>
-
-  <p>Email: ompanchal766@gmail.com</p>
-</section>
- 
-<!-- Buy Me a Coffee Support Button -->
-<div style="text-align:center; margin:25px auto;">
-  <a href="https://buymeacoffee.com/ompanchal70"
-     target="_blank"
-     rel="noopener noreferrer"
-     style="display:inline-block;
-            background:#ffdd00;
-            color:#000;
-            padding:14px 28px;
-            border-radius:12px;
-            font-size:18px;
-            font-weight:bold;
-            text-decoration:none;">
-    ☕ Support Us
-  </a>
-</div>
- 
-</body>
-  </html>
-  
+</html>
