@@ -219,7 +219,11 @@ function changeLanguage(){
 function start(type){
  clearInterval(clock);
  if(type==="mixed"){
-  questions=[...data.logic.slice(0,8),...data.math.slice(0,6),...data.riddle.slice(0,6)];
+  questions=[
+ ...data.logic,
+ ...data.math,
+ ...data.riddle
+];
  }else{
   questions=[...data[type]];
  }
